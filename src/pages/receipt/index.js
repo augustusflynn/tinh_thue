@@ -65,7 +65,7 @@ function Receipt() {
 
   function handleCalculateTotal() {
     let tong = 0;
-    if (data.option === "#gt3") {
+    if (data.option === "#gte3") {
       for (let thunhap of data.months) {
         tong += calculateTaxByMonth(thunhap.income, data.songuoipt, data.bhxh)
       }
@@ -134,7 +134,7 @@ function Receipt() {
                         <td>{m.income}</td>
                         <td>
                           {
-                            data.option === "#gt3" ?
+                            data.option === "#gte3" ?
                               calculateTaxGTE3(m.income) :
                               calculateTaxLT3(m.income)
                           }

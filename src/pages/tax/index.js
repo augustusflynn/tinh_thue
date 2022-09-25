@@ -161,7 +161,7 @@ function Tax({ history }) {
         <div className="title">
           <h1>
             {
-              OPTION === "#gt3" ?
+              OPTION === "#gte3" ?
                 "Ký hợp đồng trên 3 tháng" :
                 "Không ký hợp đồng hoặc ký hợp đồng dưới 3 tháng"
             }
@@ -201,7 +201,7 @@ function Tax({ history }) {
             <Input />
           </Form.Item>
           {
-            OPTION === "#gt3" && (
+            OPTION === "#gte3" && (
               <>
                 <Form.Item
                   label="Bảo hiểm xã hội"
