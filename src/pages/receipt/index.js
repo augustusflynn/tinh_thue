@@ -108,7 +108,7 @@ function Receipt() {
                   <td>{data.name}</td>
                   {
                     data.songuoipt && (
-                      <td>songuoipt</td>
+                      <td>{data.songuoipt}</td>
                     )
                   }
                 </tr>
@@ -154,6 +154,46 @@ function Receipt() {
                   {handleCalculateTotal()}
                 </th>
               </tr>
+            </table>
+          </div>
+
+          <div class='table'>
+            <table>
+              <thead>
+                <tr>
+                  <th>Số thuế đã nộp</th>
+                  <th>Số thuế thực tế</th>
+                  <th>
+                    {/* <?php
+                                    $sumdanop = array_sum($arraythuedanop);
+                                    $sumthucte = array_sum($arraythuethucte);
+                                    $c = $sumthucte / 12;
+                                    $d = floatval($_POST["songuoipt"]);
+                                    $sumthuctenop = tienthuethang($c, $d) * 12;
+                                    if ($sumdanop > $sumthuctenop) {
+                                        echo "Số thuế nhận lại";
+                                    } else {
+                                        echo "Số thuế trả thêm";
+                                    }
+                                    ?> */}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {/* <td><?php echo $sumdanop; ?></td>
+                                <td><?php echo $sumthuctenop; ?></td>
+                                <td>
+                                    <?php
+                                    if ($sumdanop > $sumthuctenop) {
+                                        echo $sumdanop - $sumthuctenop;
+                                    } else {
+                                        echo $sumthuctenop - $sumdanop;
+                                    }
+                                    ?>
+                                </td> */}
+                </tr>
+              </tbody>
             </table>
           </div>
         </Card>
