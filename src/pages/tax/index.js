@@ -1,9 +1,9 @@
-import React, { useState, lazy } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Footer, Step, EditableCell } from 'components'
+import { Footer, EditableCell } from 'components'
 import { Button, DatePicker, Form, Input, InputNumber, message, Popconfirm, Switch, Table, Typography } from 'antd'
 import moment from 'moment'
-import { values } from 'lodash'
+
 function Tax({ history }) {
   const OPTION = window.location.hash
   const [editingKey, setEditingKey] = useState('');
@@ -11,7 +11,6 @@ function Tax({ history }) {
   const [tableForm] = Form.useForm();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
-  const [disabled, setDisabled] = useState(true);
   const isEditing = (record) => record.key === editingKey;
 
   const edit = (record) => {
@@ -70,14 +69,14 @@ function Tax({ history }) {
     {
       title: 'Tháng',
       dataIndex: 'month',
-      width: '25%',
+      width: '35%',
       editable: true,
     },
     {
       title: 'Thu nhập (VND)',
       dataIndex: 'income',
       inputType: 'number',
-      width: '25%',
+      width: '35%',
       editable: true,
     },
     {
@@ -106,7 +105,7 @@ function Tax({ history }) {
         );
       },
     },
-   ];
+  ];
 
   const mergedColumns = columns.map(col => {
     if (!col.editable) {
@@ -124,7 +123,7 @@ function Tax({ history }) {
     };
   });
 
-  const   onSubmit = () => {
+  const onSubmit = () => {
     if (count === 0) {
       message.warn("Không có dữ liệu để tính.");
       return;
@@ -156,11 +155,11 @@ function Tax({ history }) {
   return (
     <StyledTax>
       <div>
-     
+
 
         <div className="title">
           <h1>
-          [TIỆN ÍCH] Tính thuế thu nhập cá nhân 2022
+            [TIỆN ÍCH] Tính thuế thu nhập cá nhân 2022
           </h1>
         </div>
 
@@ -197,34 +196,34 @@ function Tax({ history }) {
             <Input />
           </Form.Item>
           <Form.Item
-                  label="Bảo hiểm xã hội"
-                  name="bhxh"
-                >
-                  <Switch />
+            label="Bảo hiểm xã hội"
+            name="bhxh"
+          >
+            <Switch />
           </Form.Item>
           <Form.Item
-          label = "Giảm trừ bản thân"
-          name="gtbt">
-              <Input
+            label="Giảm trừ bản thân"
+            name="gtbt">
+            <Input
               defaultValue={11}
-              disabled={disabled}
-              />
+              suffix={"Triệu VND"}
+            />
           </Form.Item>
           <Form.Item
-                  label="Số người phụ thuộc"
-                  name="songuoipt"
-                  required
-                  rules={[
-                    { required: true, message: "Vui lòng nhập thông tin" }
-                  ]}
-                >
-                  <InputNumber
-                    className='w-100'
-                    min="0"
-                  />
+            label="Số người phụ thuộc"
+            name="songuoipt"
+            required
+            rules={[
+              { required: true, message: "Vui lòng nhập thông tin" }
+            ]}
+          >
+            <InputNumber
+              className='w-100'
+              min="0"
+            />
           </Form.Item>
-              
-          
+
+
         </Form>
 
         <h4>Hãy nhập thu nhập cá nhân mỗi tháng của bạn!</h4>

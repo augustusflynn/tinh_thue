@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
-import { Footer, Step } from 'components'
-import { Card } from 'antd';
+import { Footer } from 'components'
+import { Button, Card } from 'antd';
 
-function Receipt() {
+function Receipt({ history }) {
   const { state } = useLocation();
   const data = state.values;
 
@@ -15,11 +15,10 @@ function Receipt() {
     } else {
       baohiem = 0;
     }
-    if(tienthunhap <= 11000000){
-      let thuethunhap;
-      return thuethunhap = 0;
+    if (tienthunhap <= 11000000) {
+      return 0;
     }
-    else{
+    else {
 
       const phuphuoc = songuoiphuthuoc * 4400000;
       const thuethunhap = tienthunhap - 11000000 - phuphuoc - baohiem;
@@ -52,7 +51,7 @@ function Receipt() {
       return thuethunhap = thuethunhap * 0.25 - 3.25;
     }
 
-    if (thuethunhap > 52000000&& thuethunhap <= 80000000) {
+    if (thuethunhap > 52000000 && thuethunhap <= 80000000) {
       return thuethunhap = thuethunhap * 0.30 - 5.85;
     }
 
@@ -61,51 +60,39 @@ function Receipt() {
     }
   }
 
-  function handleCalculateTotal() {
-    let tong1 = 0;
-    
-      for (let thunhap of data.months) {
-        tong1 += calculateTaxByMonth(thunhap.income, data.songuoipt, data.bhxh)
-      }
-    
-    
-    return tong1;
+  function soThueDaNop() {
+    let tong2 = 0;
+    for (let thunhap of data.months) {
+      let thuethunhap = calculateTaxByMonth(thunhap.income, data.songuoipt, data.bhxh)
+      tong2 += calculateTaxGTE3(thuethunhap)
+    }
+
+    return tong2;
+
+  }
+  function soThueThucTe() {
+    let tongThuNhap = 0;
+    let thueCoBan = data.months.length * 11000000
+    for (let thunhap of data.months) {
+      tongThuNhap += thunhap.income
+    }
+    let tongThuNhapTinhThue = calculateTaxByMonth(tongThuNhap, data.songuoipt, data.bhxh) - thueCoBan;
+    let thueTNCNThucTe = calculateTaxGTE3(tongThuNhapTinhThue)
+    return thueTNCNThucTe
+
   }
 
-function soThueDaNop(){
-  let tong2 = 0;
-  for (let thunhap of data.months) {
-     let thuethunhap = calculateTaxByMonth(thunhap.income, data.songuoipt, data.bhxh)
-     tong2 +=  calculateTaxGTE3(thuethunhap)
+  function tienThueNhanLai(thuetamnop, thuethucte) {
+    return thuetamnop - thuethucte;
   }
-
-   return tong2;
-   
-}
-function soThueThucTe(){
-  let tongThuNhap = 0;
-  let thueCoBan = data.months.length * 11000000
-  for (let thunhap of data.months) {
-    tongThuNhap += thunhap.income
-  }
-  let tongThuNhapTinhThue = calculateTaxByMonth(tongThuNhap, data.songuoipt, data.bhxh) - thueCoBan;
-  let thueTNCNThucTe = calculateTaxGTE3(tongThuNhapTinhThue)
-  return thueTNCNThucTe
-  
-}
-
-function tienThueNhanLai(thuetamnop,thuethucte){
-  return thuetamnop - thuethucte;
-}
   return (
     <StyledReceipt>
       <div>
-        
-
+        <h1 className='title'>Hoá đơn thuế</h1>
         <Card
           title="Thông tin thu nhập"
           style={{
-            width: 700,
+            width: window.screen.availWidth > 560 ? 560 : 'unset',
             margin: '5em auto'
           }}
         >
@@ -151,7 +138,7 @@ function tienThueNhanLai(thuetamnop,thuethucte){
                   data.months.map((m) => {
                     // let thuethunhap = calculateTaxByMonth(m.income,data.songuoipt,data.bhxh)
                     return (
-                     
+
                       <tr key={m.month}>
                         <td>{m.month}</td>
                         <td>{m.income}</td>
@@ -159,8 +146,8 @@ function tienThueNhanLai(thuetamnop,thuethucte){
                           calculateTaxByMonth(m.income,data.songuoipt,data.bhxh)}</td> */}
                         <td>
                           {
-                           
-                              calculateTaxGTE3(calculateTaxByMonth(m.income,data.songuoipt,data.bhxh)) 
+
+                            calculateTaxGTE3(calculateTaxByMonth(m.income, data.songuoipt, data.bhxh))
                           }
                         </td>
                       </tr>
@@ -188,19 +175,25 @@ function tienThueNhanLai(thuetamnop,thuethucte){
                   <th>Thuế TNCN đã tạm nộp </th>
                   <th>Thuế TNCN thực tế </th>
                   <th>Tiền thuế nhận lại </th>
-                 
+
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>{soThueDaNop()}</td>
                   <td>{soThueThucTe()}</td>
-                  <td>{tienThueNhanLai(soThueDaNop(),soThueThucTe())}</td>
+                  <td>{tienThueNhanLai(soThueDaNop(), soThueThucTe())}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </Card>
+
+        <div className='d-flex w-full justify-content-center'>
+          <Button type="primary" onClick={history.goBack}>
+            Tạo hoá đơn khác
+          </Button>
+        </div>
       </div>
       <Footer />
     </StyledReceipt>
@@ -210,6 +203,10 @@ function tienThueNhanLai(thuetamnop,thuethucte){
 const StyledReceipt = styled.main`
   margin: 0 24px;
   margin-top: 50px;
+
+  .title {
+    text-align: center;
+  }
 
   .table {
     table {
