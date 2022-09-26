@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, lazy } from 'react'
 import styled from 'styled-components'
 import { Footer, Step, EditableCell } from 'components'
 import { Button, DatePicker, Form, Input, InputNumber, message, Popconfirm, Switch, Table, Typography } from 'antd'
 import moment from 'moment'
-
+import { values } from 'lodash'
 function Tax({ history }) {
   const OPTION = window.location.hash
   const [editingKey, setEditingKey] = useState('');
@@ -11,7 +11,7 @@ function Tax({ history }) {
   const [tableForm] = Form.useForm();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
-
+  const [disabled, setDisabled] = useState(true);
   const isEditing = (record) => record.key === editingKey;
 
   const edit = (record) => {
@@ -74,7 +74,7 @@ function Tax({ history }) {
       editable: true,
     },
     {
-      title: 'Thu nhập (triệu VND)',
+      title: 'Thu nhập (VND)',
       dataIndex: 'income',
       inputType: 'number',
       width: '25%',
@@ -106,7 +106,7 @@ function Tax({ history }) {
         );
       },
     },
-  ];
+   ];
 
   const mergedColumns = columns.map(col => {
     if (!col.editable) {
@@ -124,7 +124,7 @@ function Tax({ history }) {
     };
   });
 
-  const onSubmit = () => {
+  const   onSubmit = () => {
     if (count === 0) {
       message.warn("Không có dữ liệu để tính.");
       return;
@@ -144,6 +144,7 @@ function Tax({ history }) {
           values: {
             year: submitedValue[0].year.format("DD/MM/YYYY"),
             name: submitedValue[0].name,
+            gtbt: submitedValue[0].gtbt,
             songuoipt: submitedValue[0].songuoipt,
             bhxh: submitedValue[0].bhxh,
             months: data,
@@ -152,19 +153,14 @@ function Tax({ history }) {
         })
       })
   }
-
   return (
     <StyledTax>
       <div>
-        <Step current={1} />
+     
 
         <div className="title">
           <h1>
-            {
-              OPTION === "#gte3" ?
-                "Ký hợp đồng trên 3 tháng" :
-                "Không ký hợp đồng hoặc ký hợp đồng dưới 3 tháng"
-            }
+          [TIỆN ÍCH] Tính thuế thu nhập cá nhân 2022
           </h1>
         </div>
 
@@ -200,16 +196,21 @@ function Tax({ history }) {
           >
             <Input />
           </Form.Item>
-          {
-            OPTION === "#gte3" && (
-              <>
-                <Form.Item
+          <Form.Item
                   label="Bảo hiểm xã hội"
                   name="bhxh"
                 >
                   <Switch />
-                </Form.Item>
-                <Form.Item
+          </Form.Item>
+          <Form.Item
+          label = "Giảm trừ bản thân"
+          name="gtbt">
+              <Input
+              defaultValue={11}
+              disabled={disabled}
+              />
+          </Form.Item>
+          <Form.Item
                   label="Số người phụ thuộc"
                   name="songuoipt"
                   required
@@ -221,10 +222,9 @@ function Tax({ history }) {
                     className='w-100'
                     min="0"
                   />
-                </Form.Item>
-              </>
-            )
-          }
+          </Form.Item>
+              
+          
         </Form>
 
         <h4>Hãy nhập thu nhập cá nhân mỗi tháng của bạn!</h4>

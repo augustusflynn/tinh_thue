@@ -8,15 +8,6 @@ function Receipt() {
   const { state } = useLocation();
   const data = state.values;
 
-  function calculateTaxLT3(thunhap) {
-    if (thunhap < 2) {
-      return 0;
-
-    } else {
-      return thunhap * 0.01;
-    }
-  }
-
   function calculateTaxByMonth(tienthunhap, songuoiphuthuoc, bhxh = false) {
     let baohiem
     if (bhxh) {
@@ -24,68 +15,97 @@ function Receipt() {
     } else {
       baohiem = 0;
     }
-    const phuphuoc = songuoiphuthuoc * 4.4;
-    const thuethunhap = tienthunhap - 11 - phuphuoc - baohiem;
-    return calculateTaxGTE3(thuethunhap);
+    if(tienthunhap <= 11000000){
+      let thuethunhap;
+      return thuethunhap = 0;
+    }
+    else{
+
+      const phuphuoc = songuoiphuthuoc * 4400000;
+      const thuethunhap = tienthunhap - 11000000 - phuphuoc - baohiem;
+      return thuethunhap;
+    }
   }
 
   function calculateTaxGTE3(thuethunhap) {
-    if (thuethunhap < 0) {
+    if (thuethunhap <= 0) {
       return thuethunhap = 0.0;
     }
 
-    if (thuethunhap <= 5) {
+    if (thuethunhap <= 5000000) {
       return thuethunhap = thuethunhap * 0.05;
     }
 
-    if (thuethunhap > 5 && thuethunhap <= 10) {
+    if (thuethunhap > 5000000 && thuethunhap <= 10000000) {
       return thuethunhap = thuethunhap * 0.1 - 0.25;
     }
 
-    if (thuethunhap > 10 && thuethunhap <= 18) {
+    if (thuethunhap > 10000000 && thuethunhap <= 18000000) {
       return thuethunhap = thuethunhap * 0.15 - 0.75;
     }
 
-    if (thuethunhap > 18 && thuethunhap <= 32) {
+    if (thuethunhap > 18000000 && thuethunhap <= 32000000) {
       return thuethunhap = thuethunhap * 0.2 - 1.65;
     }
 
-    if (thuethunhap > 32 && thuethunhap <= 52) {
+    if (thuethunhap > 32000000 && thuethunhap <= 52000000) {
       return thuethunhap = thuethunhap * 0.25 - 3.25;
     }
 
-    if (thuethunhap > 52 && thuethunhap <= 80) {
+    if (thuethunhap > 52000000&& thuethunhap <= 80000000) {
       return thuethunhap = thuethunhap * 0.30 - 5.85;
     }
 
-    if (thuethunhap > 80) {
+    if (thuethunhap > 80000000) {
       return thuethunhap = thuethunhap * 0.35 - 9.85;
     }
   }
 
   function handleCalculateTotal() {
-    let tong = 0;
-    if (data.option === "#gte3") {
+    let tong1 = 0;
+    
       for (let thunhap of data.months) {
-        tong += calculateTaxByMonth(thunhap.income, data.songuoipt, data.bhxh)
+        tong1 += calculateTaxByMonth(thunhap.income, data.songuoipt, data.bhxh)
       }
-    } else {
-      for (let thunhap of data.months) {
-        tong += calculateTaxLT3(thunhap.income)
-      }
-    }
-    return tong;
+    
+    
+    return tong1;
   }
 
+function soThueDaNop(){
+  let tong2 = 0;
+  for (let thunhap of data.months) {
+     let thuethunhap = calculateTaxByMonth(thunhap.income, data.songuoipt, data.bhxh)
+     tong2 +=  calculateTaxGTE3(thuethunhap)
+  }
+
+   return tong2;
+   
+}
+function soThueThucTe(){
+  let tongThuNhap = 0;
+  let thueCoBan = data.months.length * 11000000
+  for (let thunhap of data.months) {
+    tongThuNhap += thunhap.income
+  }
+  let tongThuNhapTinhThue = calculateTaxByMonth(tongThuNhap, data.songuoipt, data.bhxh) - thueCoBan;
+  let thueTNCNThucTe = calculateTaxGTE3(tongThuNhapTinhThue)
+  return thueTNCNThucTe
+  
+}
+
+function tienThueNhanLai(thuetamnop,thuethucte){
+  return thuetamnop - thuethucte;
+}
   return (
     <StyledReceipt>
       <div>
-        <Step current={2} />
+        
 
         <Card
           title="Thông tin thu nhập"
           style={{
-            width: 400,
+            width: 700,
             margin: '5em auto'
           }}
         >
@@ -93,7 +113,7 @@ function Receipt() {
             <table>
               <thead>
                 <tr>
-                  <th className='mr-3'>Năm</th>
+                  <th className='mr-3'>Ngày tháng năm</th>
                   <th>Họ và tên</th>
                   {
                     data.songuoipt && (
@@ -121,22 +141,26 @@ function Receipt() {
               <thead>
                 <tr>
                   <th>Tháng</th>
-                  <th>Thu nhập</th>
-                  <th>Thuế thu nhập</th>
+                  <th>Thu nhập </th>
+                  {/* <th>Thu nhập tính thuế </th> */}
+                  <th>Thuế thu nhập phải nộp </th>
                 </tr>
               </thead>
               <tbody>
                 {
                   data.months.map((m) => {
+                    // let thuethunhap = calculateTaxByMonth(m.income,data.songuoipt,data.bhxh)
                     return (
+                     
                       <tr key={m.month}>
                         <td>{m.month}</td>
                         <td>{m.income}</td>
+                        {/* <td>{
+                          calculateTaxByMonth(m.income,data.songuoipt,data.bhxh)}</td> */}
                         <td>
                           {
-                            data.option === "#gte3" ?
-                              calculateTaxGTE3(m.income) :
-                              calculateTaxLT3(m.income)
+                           
+                              calculateTaxGTE3(calculateTaxByMonth(m.income,data.songuoipt,data.bhxh)) 
                           }
                         </td>
                       </tr>
@@ -146,52 +170,32 @@ function Receipt() {
               </tbody>
             </table>
           </div>
-          <div className='table'>
+          {/* <div className='table'>
             <table>
               <tr>
-                <th>Tổng thuế năm</th>
+                <th>Tổng thuế TNCN </th>
                 <th>
                   {handleCalculateTotal()}
                 </th>
               </tr>
             </table>
-          </div>
+          </div> */}
 
           <div class='table'>
             <table>
               <thead>
                 <tr>
-                  <th>Số thuế đã nộp</th>
-                  <th>Số thuế thực tế</th>
-                  <th>
-                    {/* <?php
-                                    $sumdanop = array_sum($arraythuedanop);
-                                    $sumthucte = array_sum($arraythuethucte);
-                                    $c = $sumthucte / 12;
-                                    $d = floatval($_POST["songuoipt"]);
-                                    $sumthuctenop = tienthuethang($c, $d) * 12;
-                                    if ($sumdanop > $sumthuctenop) {
-                                        echo "Số thuế nhận lại";
-                                    } else {
-                                        echo "Số thuế trả thêm";
-                                    }
-                                    ?> */}
-                  </th>
+                  <th>Thuế TNCN đã tạm nộp </th>
+                  <th>Thuế TNCN thực tế </th>
+                  <th>Tiền thuế nhận lại </th>
+                 
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  {/* <td><?php echo $sumdanop; ?></td>
-                                <td><?php echo $sumthuctenop; ?></td>
-                                <td>
-                                    <?php
-                                    if ($sumdanop > $sumthuctenop) {
-                                        echo $sumdanop - $sumthuctenop;
-                                    } else {
-                                        echo $sumthuctenop - $sumdanop;
-                                    }
-                                    ?>
-                                </td> */}
+                  <td>{soThueDaNop()}</td>
+                  <td>{soThueThucTe()}</td>
+                  <td>{tienThueNhanLai(soThueDaNop(),soThueThucTe())}</td>
                 </tr>
               </tbody>
             </table>

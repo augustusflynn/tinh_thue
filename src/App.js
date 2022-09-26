@@ -9,12 +9,12 @@ const Tax = lazy(() => import("./pages/tax"))
 const Receipt = lazy(() => import("./pages/receipt"))
 
 export const routes = {
-  home: {
-    path: "/",
-    component: Home
-  },
+  // home: {
+  //   path: "/",
+  //   component: Home
+  // },
   tax: {
-    path: "/tax",
+    path: "/",
     component: Tax
   },
   receipt: {
