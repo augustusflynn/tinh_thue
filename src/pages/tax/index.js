@@ -205,8 +205,9 @@ function Tax({ history }) {
             label="Giảm trừ bản thân"
             name="gtbt">
             <Input
-              defaultValue={11}
-              suffix={"Triệu VND"}
+              defaultValue={11000000}
+              suffix={"VND"}
+              disabled
             />
           </Form.Item>
           <Form.Item
