@@ -9,8 +9,6 @@ import { isBuffer, values } from 'lodash'
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 
-
-
 const StyledReceipt = styled.main`
   margin: 0 24px;
   margin-top: 50px;
@@ -39,6 +37,17 @@ function Tax({ history }) {
     setEditingKey('');
   };
 
+  // const getMoney=()=>{
+  //  let total = 0;
+  //   if(data.day.substring(3,5) === "01"){
+      
+  //     return total += [].income
+  //   }
+  //   else{
+  //     return total
+  //   }
+  // }
+  // console.log(getMoney(data))
   const test = () => {
     const res = {}
     data.map(ele => {
@@ -55,16 +64,8 @@ function Tax({ history }) {
     return Object.values(res)
 
   }
-  // const getSum =([],day)=>{
-  //   const month = new Date(day).getMonth() + 1
-  //   const total = 0
-  //   for( var i = 1; i <= 12; i++ ){
-  //     if([].month[i]=== 5){
-  //       total+=[].income[i]
-  //     }
-  //     console.log(total)
-  //     return total
-  //   }
+  // const getSum =([])=>{
+  //   new Arr = []
   // }
 
   const dataChart = {
@@ -355,7 +356,7 @@ function Tax({ history }) {
 
 
             <Card
-              title="Thống kê chi tiêu tháng"
+              title="Thống kê chi tiêu"
               style={{
                 width: 700,
                 margin: '5em auto'
@@ -365,24 +366,24 @@ function Tax({ history }) {
                 <table>
                   <thead>
                     <tr>
-                      <th className='mr-3'>Tháng</th>
-                      <th className='mr-3'>Tổng chi</th>
+                      <th className='mr-3'>Ngày</th>
+                      <th className='mr-3'>Tổng chi(VNĐ)</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((m) => {
-                      return (
-                        <tr key={m.day}>
-                          <td>{new Date(m.day).getMonth() + 1}</td>
-                          <td>{
-                            // m.filter((ele)=> {
-                            //   return 
-                            // })
-                          }
-                          </td>
-                        </tr>
-                      )
-                    })}
+                    
+                      {data.map((m)=>{
+                        return(
+                          <tr>
+                          <td>{m.day}</td>
+                          <td>{m.income}</td>
+                          </tr>
+                        )
+                      })}
+                     
+                      
+                      
+                    
                   </tbody>
                 </table>
               </div>
