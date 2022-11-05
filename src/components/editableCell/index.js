@@ -1,4 +1,4 @@
-import { InputNumber, Input, Form } from "antd";
+import { InputNumber, Input, Form, DatePicker } from "antd";
 import React from "react"
 
 const EditableCell = ({
@@ -8,10 +8,12 @@ const EditableCell = ({
   inputType,
   record,
   index,
+  DatePicker,
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  const inputNode = 
+  inputType === 'number' ? <InputNumber /> : <Input />;
 
   return (
     <td {...restProps}>

@@ -5,7 +5,7 @@ function Footer() {
   return (
     <>
       <StyledFooter>
-        &copy; Nhóm Siêu Cấp Vjp Props
+        &copy; Quản lí chi tiêu
       </StyledFooter>
       <div
         style={{

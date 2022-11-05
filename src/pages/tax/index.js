@@ -1,9 +1,26 @@
 import React, { useState, lazy } from 'react'
 import styled from 'styled-components'
 import { Footer, Step, EditableCell } from 'components'
-import { Button, DatePicker, Form, Input, InputNumber, message, Popconfirm, Switch, Table, Typography } from 'antd'
+import { Button, DatePicker, Form, Input, InputNumber, message, Popconfirm, Switch, Table, Typography, Card } from 'antd'
 import moment from 'moment'
-import { values } from 'lodash'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
+import { isBuffer, values } from 'lodash'
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+
+
+
+const StyledReceipt = styled.main`
+  margin: 0 24px;
+  margin-top: 50px;
+
+  .table {
+    table {
+      width: 100%;
+    }
+  }
+`
 function Tax({ history }) {
   const OPTION = window.location.hash
   const [editingKey, setEditingKey] = useState('');
@@ -23,6 +40,60 @@ function Tax({ history }) {
     setEditingKey('');
   };
 
+  const test = () => {
+    const res = {}
+    data.map(ele => {
+      if (!res[ele.type])
+        res[ele.type] = 0
+
+      res[ele.type] += ele.income
+      console.log(res[ele.type])
+      console.log(ele.income)
+    }
+    )
+    console.log(res)
+    console.log(Object.values(res))
+    return Object.values(res)
+
+  }
+  // const getSum =([],day)=>{
+  //   const month = new Date(day).getMonth() + 1
+  //   const total = 0
+  //   for( var i = 1; i <= 12; i++ ){
+  //     if([].month[i]=== 5){
+  //       total+=[].income[i]
+  //     }
+  //     console.log(total)
+  //     return total
+  //   }
+  // }
+
+  const dataChart = {
+    labels: data.map((ele) => ele.type),
+    datasets: [
+      {
+        label: '# of Votes',
+        data: test(),
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
   const save = async (key) => {
     try {
@@ -68,18 +139,32 @@ function Tax({ history }) {
 
   const columns = [
     {
-      title: 'Tháng',
-      dataIndex: 'month',
-      width: '25%',
+      title: 'Ngày',
+      dataIndex: 'day',
+      width: '20%',
+      editable: true,
+
+    },
+    {
+      title: 'Tên khoản chi',
+      dataIndex: 'type',
+      width: '20%',
       editable: true,
     },
     {
-      title: 'Thu nhập (VND)',
+      title: 'Nhập số tiền (VND)',
       dataIndex: 'income',
       inputType: 'number',
-      width: '25%',
+      width: '20%',
       editable: true,
     },
+    {
+      title: 'Mô tả',
+      dataIndex: 'content',
+      width: '20%',
+      editable: true,
+    },
+
     {
       title: 'Hành động',
       render: (_, record) => {
@@ -106,7 +191,15 @@ function Tax({ history }) {
         );
       },
     },
-   ];
+  ];
+  // const getSum = ([])=>{
+  //   let month = 
+  //   if(!month){
+  //      total = [].reducereduce((previousValue, currentValue) => previousValue + currentValue, 0);
+
+  //   }
+  //   return total
+  // }
 
   const mergedColumns = columns.map(col => {
     if (!col.editable) {
@@ -124,50 +217,51 @@ function Tax({ history }) {
     };
   });
 
-  const   onSubmit = () => {
-    if (count === 0) {
-      message.warn("Không có dữ liệu để tính.");
-      return;
-    }
+  // const onSubmit = () => {
+  //   if (count === 0) {
+  //     message.warn("Không có dữ liệu để tính.");
+  //     return;
+  //   }
 
-    if (editingKey === 0 || editingKey) {
-      message.warn("Vui lòng hoàn tất điền thông tin vào mẫu.")
-      return
-    }
+  //   if (editingKey === 0 || editingKey) {
+  //     message.warn("Vui lòng hoàn tất điền thông tin vào mẫu.")
+  //     return
+  //   }
 
-    Promise.all([
-      form.validateFields(),
-      tableForm.validateFields()
-    ])
-      .then((submitedValue) => {
-        history.push('/receipt', {
-          values: {
-            year: submitedValue[0].year.format("DD/MM/YYYY"),
-            name: submitedValue[0].name,
-            gtbt: submitedValue[0].gtbt,
-            songuoipt: submitedValue[0].songuoipt,
-            bhxh: submitedValue[0].bhxh,
-            months: data,
-            option: OPTION,
-          }
-        })
-      })
-  }
+  //   Promise.all([
+  //     form.validateFields(),
+  //     tableForm.validateFields()
+  //   ])
+  //     .then((submitedValue) => {
+  //       history.push('/', {
+  //         values: {
+  //           year: submitedValue[0].year.format("DD/MM/YYYY"),
+  //           name: submitedValue[0].name,
+  //           gtbt: submitedValue[0].gtbt,
+  //           songuoipt: submitedValue[0].songuoipt,
+  //           bhxh: submitedValue[0].bhxh,
+  //           months: data,
+  //           option: OPTION,
+  //         }
+  //       })
+  //     })
+  // }
+
   return (
     <StyledTax>
       <div>
-     
+
 
         <div className="title">
           <h1>
-          [TIỆN ÍCH] Tính thuế thu nhập cá nhân 2022
+            Chào mừng bạn đến với App quản lí chi tiêu
           </h1>
         </div>
 
         <Form
           layout="vertical"
           form={form}
-          onFinish={onSubmit}
+        // onFinish={onSubmit}
         >
           <Form.Item
             label="Năm"
@@ -196,7 +290,7 @@ function Tax({ history }) {
           >
             <Input />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
                   label="Bảo hiểm xã hội"
                   name="bhxh"
                 >
@@ -209,8 +303,8 @@ function Tax({ history }) {
               defaultValue={11}
               disabled={disabled}
               />
-          </Form.Item>
-          <Form.Item
+          </Form.Item> */}
+          {/* <Form.Item
                   label="Số người phụ thuộc"
                   name="songuoipt"
                   required
@@ -222,12 +316,12 @@ function Tax({ history }) {
                     className='w-100'
                     min="0"
                   />
-          </Form.Item>
-              
-          
+          </Form.Item> */}
+
+
         </Form>
 
-        <h4>Hãy nhập thu nhập cá nhân mỗi tháng của bạn!</h4>
+        <h4>Hãy nhập các khoản chi của bạn!</h4>
         <Form form={tableForm}>
           <Table
             components={{
@@ -243,13 +337,68 @@ function Tax({ history }) {
           />
         </Form>
         <Button onClick={handleAdd} type="primary" className='my-5'>
-          Thêm cột
+          Thêm khoản chi
         </Button>
-        <div className='btn-confirm'>
+        {/* <div className='btn-confirm'>
           <Button onClick={onSubmit} type="primary" className='my-5'>
             Tính
           </Button>
-        </div>
+        </div> */}
+
+        {/* <div>
+      
+        <Pie data={dataChart} />
+            </div> */}
+
+
+        <StyledReceipt>
+          <div>
+
+
+            <Card
+              title="Thống kê chi tiêu tháng"
+              style={{
+                width: 700,
+                margin: '5em auto'
+              }}
+            >
+              <div className='table'>
+                <table>
+                  <thead>
+                    <tr>
+                      <th className='mr-3'>Tháng</th>
+                      <th className='mr-3'>Tổng chi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((m) => {
+                      return (
+                        <tr key={m.day}>
+                          <td>{new Date(m.day).getMonth() + 1}</td>
+                          <td>{
+                            // m.filter((ele)=> {
+                            //   return 
+                            // })
+                          }
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+
+
+          </div>
+          <div>
+            <h4>
+              Biểu đồ chi tiêu
+              <Pie data={dataChart} />
+            </h4>
+          </div>
+          <Footer />
+        </StyledReceipt>
       </div>
       <Footer />
     </StyledTax>
