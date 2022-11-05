@@ -1,4 +1,4 @@
-import React, { useState, lazy } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Footer, Step, EditableCell } from 'components'
 import { Button, DatePicker, Form, Input, InputNumber, message, Popconfirm, Switch, Table, Typography, Card } from 'antd'
@@ -28,7 +28,6 @@ function Tax({ history }) {
   const [tableForm] = Form.useForm();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
-  const [disabled, setDisabled] = useState(true);
   const isEditing = (record) => record.key === editingKey;
 
   const edit = (record) => {

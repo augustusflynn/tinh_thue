@@ -4,6 +4,7 @@ import { Spin } from 'antd';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import './App.css'
 
+// const Home = lazy(() => import("./pages/home"))
 const Tax = lazy(() => import("./pages/tax"))
 const Receipt = lazy(() => import("./pages/receipt"))
 
